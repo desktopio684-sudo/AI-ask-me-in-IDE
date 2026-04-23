@@ -1,0 +1,40 @@
+{
+  "description": "Please test the new Tesla scroll engine! Try scrolling over this long description and then fast-swiping to the next question.",
+  "questions": [
+    {
+      "id": "tesla_scroll_feedback",
+      "options": [
+        {
+          "description": "We implemented a non-linear velocity curve. Fast scrolls accumulate delta rapidly, allowing quick 'flicks' between questions. We also added an exception to the wheel-hijack: if you hover over this exact description box, your mouse wheel will scroll this box natively. Only when you hit the top or bottom boundary of this box will the wheel event 'bubble up' and trigger the Tesla scroll to jump to the next question. This requires a complex interaction model but feels much more premium. Try scrolling this box!\nLine 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8\nLine 9\nLine 10\nLine 11\nLine 12",
+          "label": "Biological Physics Engine"
+        },
+        {
+          "description": "The old CSS scroll-snap was mechanical and unforgiving. It also broke scrolling inside these description boxes when we hid the overflow.",
+          "label": "Mechanical CSS Snap (Old)"
+        }
+      ],
+      "question": "How does the velocity curve and inner-scrolling feel now?",
+      "required": true
+    },
+    {
+      "id": "keyboard_test",
+      "options": [
+        {
+          "description": "Use Up/Down arrows to cycle through options within a question.",
+          "label": "Up/Down Arrows"
+        },
+        {
+          "description": "Use Left/Right arrows to move between questions (if there were multiple).",
+          "label": "Left/Right Arrows"
+        },
+        {
+          "description": "Press Enter to advance to the next question or submit the quiz if you're on the last one.",
+          "label": "Enter Key"
+        }
+      ],
+      "question": "Which keyboard control is your favorite?",
+      "required": true
+    }
+  ],
+  "title": "Tesla Scroll & Keyboard Verification"
+}

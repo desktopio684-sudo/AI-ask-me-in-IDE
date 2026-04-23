@@ -1,0 +1,729 @@
+/* ════════════════════════════════════════════════════════════════
+   QuizGate — Dual-theme Design System (Dark + Light)
+   ════════════════════════════════════════════════════════════════
+   Theme is set via data-theme="dark|light" on <body>.
+   VS Code's active color theme drives the attribute injection
+   from quiz-panel.ts.
+   ════════════════════════════════════════════════════════════════ */
+
+
+/* ────────────────────────────
+   DARK THEME (default)
+   ──────────────────────────── */
+:root,
+[data-theme="dark"] {
+    --bg-primary:          #0a0a0f;
+    --bg-secondary:        #12121a;
+    --bg-card:             #1a1a25;
+    --bg-card-hover:       #22222f;
+    --bg-card-selected:    rgba(130, 120, 255, 0.12);
+
+    --border-default:      rgba(255, 255, 255, 0.06);
+    --border-hover:        rgba(255, 255, 255, 0.12);
+    --border-selected:     rgba(130, 120, 255, 0.35);
+
+    --text-primary:        #e8e8ed;
+    --text-secondary:      #9e9eb0;
+    --text-muted:          rgba(255, 255, 255, 0.35);
+
+    --accent:              #8278ff;
+    --accent-surface:      rgba(130, 120, 255, 0.08);
+
+    --btn-primary-bg:      #ffffff;
+    --btn-primary-fg:      #0a0a0f;
+    --btn-submit-bg:       linear-gradient(135deg, #8278ff 0%, #6c63ff 100%);
+    --btn-submit-fg:       #ffffff;
+
+    --timer-bg:            rgba(255, 255, 255, 0.04);
+    --timer-border:        rgba(255, 255, 255, 0.08);
+
+    --footer-fade:         linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, transparent 100%);
+
+    --recommendation-bg:   rgba(255, 255, 255, 0.03);
+    --recommendation-border: rgba(255, 255, 255, 0.05);
+
+    --textarea-bg:         rgba(0, 0, 0, 0.3);
+    --textarea-border:     rgba(255, 255, 255, 0.08);
+    --textarea-focus:      rgba(130, 120, 255, 0.3);
+
+    --checkmark-color:     #ffffff;
+    --icon-bg:             #ffffff;
+    --icon-fg:             #000000;
+
+    --error-color:         #ef4444;
+    --glow:                0 0 32px rgba(130, 120, 255, 0.08);
+}
+
+
+/* ────────────────────────────
+   LIGHT THEME
+   ──────────────────────────── */
+[data-theme="light"] {
+    --bg-primary:          #f5f5fa;
+    --bg-secondary:        #ededf5;
+    --bg-card:             #ffffff;
+    --bg-card-hover:       #f0f0f8;
+    --bg-card-selected:    rgba(88, 80, 236, 0.08);
+
+    --border-default:      rgba(0, 0, 0, 0.08);
+    --border-hover:        rgba(0, 0, 0, 0.14);
+    --border-selected:     rgba(88, 80, 236, 0.4);
+
+    --text-primary:        #1a1a2e;
+    --text-secondary:      #5a5a7a;
+    --text-muted:          rgba(0, 0, 0, 0.35);
+
+    --accent:              #5850ec;
+    --accent-surface:      rgba(88, 80, 236, 0.06);
+
+    --btn-primary-bg:      #5850ec;
+    --btn-primary-fg:      #ffffff;
+    --btn-submit-bg:       linear-gradient(135deg, #5850ec 0%, #4338ca 100%);
+    --btn-submit-fg:       #ffffff;
+
+    --timer-bg:            rgba(0, 0, 0, 0.03);
+    --timer-border:        rgba(0, 0, 0, 0.08);
+
+    --footer-fade:         linear-gradient(to top, rgba(245, 245, 250, 0.95) 0%, transparent 100%);
+
+    --recommendation-bg:   rgba(88, 80, 236, 0.04);
+    --recommendation-border: rgba(88, 80, 236, 0.1);
+
+    --textarea-bg:         #f8f8fc;
+    --textarea-border:     rgba(0, 0, 0, 0.1);
+    --textarea-focus:      rgba(88, 80, 236, 0.35);
+
+    --checkmark-color:     #5850ec;
+    --icon-bg:             transparent;
+    --icon-fg:             #5850ec;
+
+    --error-color:         #dc2626;
+    --glow:                0 0 32px rgba(88, 80, 236, 0.06);
+}
+
+
+/* ────────────────────────────
+   SHARED TOKENS
+   ──────────────────────────── */
+:root {
+    --radius-full:  9999px;
+    --radius-lg:    12px;
+    --radius-md:    8px;
+
+    --font-ui:    var(--vscode-font-family, "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
+    --font-label: var(--vscode-editor-font-family, "Fira Code", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace);
+}
+
+
+/* ════════════════════════════════════════
+   RESET & BASE
+   ════════════════════════════════════════ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    height: 100vh;
+    overflow: hidden;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+}
+
+
+/* ════════════════════════════════════════
+   TOPBAR — Fixed, compact
+   ════════════════════════════════════════ */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.topbar > * {
+    pointer-events: auto;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Question-mark circle icon */
+.question-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    /* Uses a ring instead of solid fill for a cleaner look */
+    border: 1.5px solid var(--accent);
+    background: var(--icon-bg);
+    color: var(--icon-fg);
+}
+
+.question-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.question-counter {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+/* Timer pill */
+.timer-pill {
+    background: var(--timer-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--timer-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-prefix {
+    font-family: var(--font-label);
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+
+    /* Hide label on very small panels — just show the digits */
+    display: none;
+}
+
+#timer-label {
+    font-family: var(--font-label);
+    font-size: 14px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+}
+
+
+/* ════════════════════════════════════════
+   MAIN — JS-Driven Tesla Scroll Container
+   ════════════════════════════════════════ */
+.scroll-container {
+    flex: 1;
+    overflow-y: hidden; /* Hijacked for JS engine */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+    touch-action: none; /* Prevent browser pull-to-refresh */
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Each question takes the full viewport height */
+.question-section {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 56px 20px 72px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(30px) scale(0.98);
+    transition: 
+        opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.question-section.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+    z-index: 10;
+}
+
+.question-section.prev {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.98);
+}
+
+.question-section.next {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+}
+
+/* Question heading */
+.question-title {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+/* Recommendation / context box */
+.recommendation-box {
+    background: var(--recommendation-bg);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    border-left: 3px solid var(--accent);
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+.recommendation-text {
+    font-family: var(--font-label);
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+
+/* ════════════════════════════════════════
+   OPTIONS GRID
+   ════════════════════════════════════════ */
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.option-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.option-item {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 48px;
+}
+
+.option-main-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.info-toggle {
+    background: var(--accent-surface);
+    border: 1px solid var(--border-default);
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.info-toggle:hover {
+    color: var(--text-primary);
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+}
+
+.info-toggle.active {
+    color: var(--accent);
+    transform: rotate(180deg);
+}
+
+.info-toggle svg {
+    width: 14px;
+    height: 14px;
+}
+
+.option-description {
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--recommendation-bg);
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    border-left: 2px solid var(--border-hover);
+    margin-left: 8px;
+    margin-right: 8px;
+    line-height: 1.5;
+    
+    /* Responsive Height Logic */
+    max-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-hover) transparent;
+}
+
+.option-description::-webkit-scrollbar {
+    width: 4px;
+}
+
+.option-description::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 10px;
+}
+
+/* Small screen height adjustments */
+@media (max-height: 700px) {
+    .option-description {
+        max-height: 80px;
+        padding: 8px 12px;
+        font-size: 10.5px;
+    }
+    
+    .option-item {
+        min-height: 40px;
+        padding: 8px 12px;
+    }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.option-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+}
+
+.option-item.selected {
+    background: var(--bg-card-selected);
+    border-color: var(--border-selected);
+}
+
+.option-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.option-item:hover .option-text {
+    color: var(--text-primary);
+}
+
+.option-item.selected .option-text {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Checkmark */
+.checkmark-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--checkmark-color);
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+    flex-shrink: 0;
+}
+
+.option-item.selected .checkmark-icon {
+    opacity: 1;
+    transform: scale(1.1);
+    color: var(--accent);
+}
+
+
+/* ════════════════════════════════════════
+   FREE-FORM ANSWER INPUT
+   Always visible below options; pre-fills when
+   user selects an option, editable at any time.
+   ════════════════════════════════════════ */
+.answer-input-wrapper {
+    margin-top: 8px;
+}
+
+.answer-textarea {
+    background: var(--textarea-bg);
+    border: 1px solid var(--textarea-border);
+    color: var(--text-primary);
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    resize: none;
+    min-height: 80px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+.answer-textarea:focus {
+    outline: none;
+    border-color: var(--textarea-focus);
+}
+
+.answer-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+
+/* ════════════════════════════════════════
+   FLOATING NAV CONTROLS
+   ════════════════════════════════════════ */
+.nav-controls-left,
+.nav-controls-right {
+    position: fixed;
+    bottom: 24px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-controls-left {
+    left: 24px;
+}
+
+.nav-controls-right {
+    right: 24px;
+}
+
+/* Base button reset */
+.btn-quit, .btn-prev, .btn-next, .btn-submit {
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+/* Quit — ghost text button */
+.btn-quit {
+    background: transparent;
+    color: var(--text-secondary);
+    opacity: 0.5;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.btn-quit:hover {
+    opacity: 1;
+}
+
+/* .footer-right removed; logic moved to .nav-controls-right */
+
+/* Previous — circle icon button */
+.btn-prev {
+    background: transparent;
+    color: var(--text-primary);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.btn-prev:hover {
+    background: var(--accent-surface);
+}
+
+.btn-prev svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Next — primary pill */
+.btn-next {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-fg);
+    padding: 10px 32px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.btn-next:hover {
+    transform: scale(1.02);
+    box-shadow: var(--glow);
+}
+
+/* Submit — accent gradient pill */
+.btn-submit {
+    background: var(--btn-submit-bg);
+    color: var(--btn-submit-fg);
+    padding: 10px 40px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: var(--glow);
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(130, 120, 255, 0.2);
+}
+
+.btn-submit:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+
+/* ════════════════════════════════════════
+   LOADING STATE
+   ════════════════════════════════════════ */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-size: 14px;
+    color: var(--text-muted);
+    font-family: var(--font-label);
+}
+
+
+/* ════════════════════════════════════════
+   UTILITIES
+   ════════════════════════════════════════ */
+.hidden {
+    display: none !important;
+}
+
+/* Fade-in-up animation for active sections */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.question-section[data-active="true"] {
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+
+/* ════════════════════════════════════════
+   RESPONSIVE — Small panels / narrow viewports
+   ════════════════════════════════════════ */
+@media (max-width: 480px) {
+    .question-section {
+        padding: 48px 14px 64px;
+    }
+
+    .question-title {
+        font-size: 22px;
+        margin-bottom: 14px;
+    }
+
+    .option-item {
+        padding: 10px 12px;
+    }
+
+    .option-text {
+        font-size: 12px;
+    }
+
+    .recommendation-box {
+        padding: 8px 10px;
+    }
+
+    .recommendation-text {
+        font-size: 10px;
+    }
+
+    .btn-next {
+        padding: 8px 24px;
+        font-size: 10px;
+    }
+
+    .btn-submit {
+        padding: 8px 28px;
+        font-size: 10px;
+    }
+
+    .nav-controls-left, .nav-controls-right {
+        bottom: 16px;
+    }
+    .nav-controls-left { left: 16px; }
+    .nav-controls-right { right: 16px; }
+}
+
+/* Medium panels */
+@media (min-width: 481px) and (max-width: 768px) {
+    .question-section {
+        padding: 52px 18px 68px;
+        max-width: 560px;
+    }
+
+    .question-title {
+        font-size: 26px;
+    }
+}
+
+/* Wide panels — show timer prefix label */
+@media (min-width: 600px) {
+    .timer-prefix {
+        display: inline;
+    }
+
+    .topbar {
+        padding: 14px 28px;
+    }
+
+    .nav-controls-left, .nav-controls-right {
+        bottom: 28px;
+    }
+}
+
+/* Very tall viewports — add more breathing room */
+@media (min-height: 900px) {
+    .question-section {
+        padding-top: 80px;
+        padding-bottom: 96px;
+    }
+
+    .question-title {
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+}

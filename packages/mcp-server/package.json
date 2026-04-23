@@ -1,0 +1,52 @@
+{
+    "name": "quizgate-mcp",
+    "version": "1.0.0",
+    "description": "MCP server that gives AI agents a beautiful quiz UI to ask clarifying questions inside VS Code",
+    "author": "Mayank",
+    "license": "MIT",
+    "type": "module",
+    "main": "dist/index.js",
+    "bin": {
+        "quizgate-mcp": "dist/index.js"
+    },
+    "files": [
+        "dist/",
+        "README.md",
+        "LICENSE"
+    ],
+    "keywords": [
+        "mcp",
+        "model-context-protocol",
+        "ai",
+        "vscode",
+        "quiz",
+        "agent",
+        "prompt",
+        "clarify",
+        "quizgate"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/quizgate/quizgate.git"
+    },
+    "homepage": "https://github.com/quizgate/quizgate#readme",
+    "bugs": {
+        "url": "https://github.com/quizgate/quizgate/issues"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "scripts": {
+        "build": "node build.mjs",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.5.0",
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "esbuild": "^0.27.3",
+        "typescript": "^5.3.3",
+        "@quizgate/shared": "*"
+    }
+}

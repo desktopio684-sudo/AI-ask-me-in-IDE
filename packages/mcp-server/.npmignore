@@ -1,0 +1,18 @@
+# Source code — bundled into dist/ by esbuild
+src/
+build.mjs
+tsconfig.json
+build.mjs
+
+# Examples — not needed by npm users
+examples/
+*.ts
+*.map
+
+# Development
+.node-version
+.env
+.env.*
+
+# Test fixtures
+fixtures/

@@ -1,0 +1,71 @@
+{
+    "name": "quizgate",
+    "displayName": "QuizGate",
+    "description": " ask IDE ai agents with MCP + vscode",
+    "version": "0.3.0",
+    "publisher": "quizgate",
+    "icon": "media/icon.png",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/quizgate/quizgate"
+    },
+    "categories": [
+        "AI",
+        "Other"
+    ],
+    "keywords": [
+        "mcp",
+        "ai",
+        "quiz",
+        "agent",
+        "prompt"
+    ],
+    "engines": {
+        "vscode": "^1.107.0"
+    },
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "quizgate.showQuiz",
+                "title": "QuizGate: Show Quiz Testing Panel"
+            }
+        ],
+        "configuration": {
+            "title": "QuizGate",
+            "properties": {
+                "quizgate.port": {
+                    "type": "number",
+                    "default": 6010,
+                    "description": "Port for QuizGate MCP HTTP bridge to connect to."
+                },
+                "quizgate.timeout": {
+                    "type": "number",
+                    "default": 120,
+                    "minimum": 5,
+                    "maximum": 600,
+                    "description": "Timeout in seconds before the quiz auto-closes. Set to 0 to disable timeout."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run esbuild-base -- --minify",
+        "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+        "esbuild": "npm run esbuild-base -- --sourcemap",
+        "build": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@quizgate/shared": "*",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.107.0",
+        "esbuild": "^0.27.3",
+        "typescript": "^5.3.3"
+    }
+}

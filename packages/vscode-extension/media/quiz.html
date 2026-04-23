@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizGate</title>
+
+    <!-- CSP injected by extension (must come first) -->
+    {{cspMeta}}
+
+    <!-- Extension stylesheet -->
+    <link href="{{styleUri}}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- ═══════════════════════════════════════
+             TOPBAR — Question counter + timer
+        ════════════════════════════════════════ -->
+        <header class="topbar" role="banner">
+
+            <!-- Left: icon + counter -->
+            <div class="topbar-left">
+                <div class="question-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 256 256">
+                        <path d="m127.6 7.61c-46.02 0-84.72 38.47-84.72 85.93 0 37.4 26.24 73.01 64.27 81.72 0.66-8.28 3.72-19.88 3.91-19.14-29.05-7.41-48.04-32.93-48.04-63.01 0-27.83 17.09-52.44 41.5-61.98 13.2-12.02 28.19-15.36 41.49-15.36 17 0 31.28 6.22 42.96 16.26-15.91-14.89-35.88-24.42-61.37-24.42z" fill="currentColor"/>
+                        <path d="m139.8 16.07c-33.74 2.65-58.99 32.72-58.99 73.48-1.66 28.52 18.22 50.23 47.13 50.23h5.02c14.7-15.47 21.04-27.29 21.33-46.24 0 14.4-12.17 26.32-26.35 26.32-15.71 0-26.82-13.25-26.88-26.03 0-17.17 9.56-28.79 26.58-28.79 15.52 0 26.63 13.82 26.63 27.82 0 20.07-6.83 34.86-22.34 49.56-12.27 13.05-13.93 29.3-13.93 39.35v10.04h19.68l0.09-14.29c37.65-3.91 74.5-38.41 74.5-84.76 0-45.33-34.63-79.74-72.47-76.69zm8.12 138.1c14.29-16.46 26.75-34.73 26.75-60.38 0-23.02-17.76-48.57-47.13-48.57-3.62 0-6.69 0.1-8.87 0.78-1.16 0.39-2.23 0.78-1.06 0 7.66-7.26 17.8-9.7 26.15-9.51 29.06 0.58 48.45 25.3 48.45 55.94 0 26.52-18.13 52.37-44.29 61.74z" fill="currentColor"/>
+                        <path d="m127.6 204.7c-12.66 0-20.71 11.3-20.71 22.26 0 11.5 9.21 21.47 20.71 21.47 12.07 0 21.29-10.26 21.29-21.27 0-11.7-8.92-22.46-21.29-22.46z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="question-counter" aria-live="polite" aria-label="Question progress">
+                    Question: <span id="current-q">1</span>/<span id="total-q">10</span>
+                </div>
+            </div>
+
+            <!-- Right: timer pill -->
+            <div class="topbar-right">
+                <div class="timer-pill" aria-label="Time remaining">
+                    <span id="timer-label" aria-live="off">02:00</span>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- ═══════════════════════════════════════
+             MAIN — Snapping question sections
+        ════════════════════════════════════════ -->
+        <main id="questions-container" class="scroll-container" aria-label="Quiz questions">
+            <div class="loading-state">Loading Quiz...</div>
+        </main>
+
+
+        <!-- ═══════════════════════════════════════
+             FLOATING NAVIGATION BUTTONS
+        ════════════════════════════════════════ -->
+        <div class="nav-controls-left">
+            <button id="quit-btn" class="btn-quit" aria-label="Quit quiz">QUIT</button>
+        </div>
+
+        <div class="nav-controls-right">
+            <button id="prev-btn" class="btn-prev hidden" aria-label="Previous question">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button id="next-btn" class="btn-next" aria-label="Next question">NEXT</button>
+            <button id="submit-btn" class="btn-submit hidden" disabled aria-label="Submit answers">SUBMIT</button>
+        </div>
+    </div>
+
+    <!-- Quiz data injected as data-quiz attr on <body> by quiz-panel.ts -->
+    <script src="{{scriptUri}}" nonce="{{nonce}}"></script>
+</body>
+
+</html>
