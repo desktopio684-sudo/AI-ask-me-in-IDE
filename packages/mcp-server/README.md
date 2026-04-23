@@ -1,36 +1,21 @@
-# QuizGate
+# QuizGate MCP Server
 
-> **Stop your AI agent from guessing. Make it ask.**
+The QuizGate MCP server exposes a single tool, `ask_user`, so an AI agent can ask the developer clarifying questions inside VS Code instead of guessing.  
 
-QuizGate is an [MCP](https://modelcontextprotocol.io/) server that gives AI agents a beautiful quiz UI to ask you clarifying questions directly inside VS Code — instead of hallucinating assumptions.
+This package is the agent-facing half of QuizGate. It pairs with the QuizGate VS Code extension, which renders the actual quiz UI.
 
-```
-  AI Agent                     You (in VS Code)
-  ┌───────────┐               ┌──────────────────┐
-  │ "Should I │  MCP ask_user │ ┌──────────────┐  │
-  │  use SQL  │ ────────────► │ │  Quiz Panel  │  │
-  │  or NoSQL │               │ │  ○ PostgreSQL │  │
-  │  ...?"    │ ◄──────────── │ │  ● SQLite    │  │
-  │           │  { answer }   │ │  ○ MySQL     │  │
-  └───────────┘               │ └──────────────┘  │
-                              └──────────────────┘
-```
+## What This Package Does
 
----
+- Exposes `ask_user` over MCP
+- Validates request and response shapes using shared schemas
+- Forwards quiz payloads to the local VS Code extension over HTTP
+- Returns structured answers back to the calling AI agent
+- Classifies failures into transport, protocol, and application-level errors
+- Uses a circuit breaker to stop repeatedly interrupting the user after repeated dismissals
 
-## Quick Start
+## Install
 
-### 1. Install the VS Code Extension
-
-Search **"QuizGate"** in the VS Code Extensions marketplace, or install from VSIX:
-
-```bash
-code --install-extension quizgate-0.2.0.vsix
-```
-
-### 2. Add QuizGate to your AI Agent's MCP config
-
-**Gemini CLI** (`~/.gemini/settings.json`):
+### Use with `npx`
 
 ```json
 {
@@ -43,26 +28,13 @@ code --install-extension quizgate-0.2.0.vsix
 }
 ```
 
-**Claude Desktop** (`claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "quizgate": {
-      "command": "npx",
-      "args": ["-y", "quizgate-mcp"]
-    }
-  }
-}
-```
-
-**Or use a local install** (faster startup, no download on each run):
+### Or install globally
 
 ```bash
 npm install -g quizgate-mcp
 ```
 
-Then point your config to:
+Then configure your MCP client like this:
 
 ```json
 {
@@ -74,77 +46,71 @@ Then point your config to:
 }
 ```
 
-### 3. Done
+## Requirements
 
-Your AI agent now has the `ask_user` tool. When it faces ambiguity, it'll summon a quiz panel in your IDE instead of guessing.
+- Node.js 18+
+- The QuizGate VS Code extension running locally
+- An MCP-compatible client such as Claude Desktop, Gemini CLI, or another MCP host
 
----
+## Tool Shape
 
-## How It Works
+The server exposes one tool:
 
-1. **AI Agent** encounters an architectural decision or ambiguity
-2. **Calls `ask_user`** via MCP with a structured question payload
-3. **MCP Server** (this package) forwards the payload to the VS Code extension via localhost HTTP
-4. **VS Code Extension** renders a beautiful quiz panel with options
-5. **You answer**, and the structured response flows back to the agent
-6. **Agent proceeds** with your actual preference — no hallucination
-
----
-
-## The `ask_user` Tool
-
-The MCP server exposes a single tool:
-
-```
+```ts
 ask_user({
   title: "Database Architecture",
-  description: "Need clarification before proceeding...",
+  description: "Need clarification before continuing",
   questions: [
     {
-      id: "q1",
-      question: "Which database engine?",
-      context: "PostgreSQL has better JSONB support...",
+      id: "db",
+      question: "Which database should I use?",
+      context: "SQLite is simpler for local dev. PostgreSQL is better for production.",
+      required: true,
       options: [
-        { label: "PostgreSQL", description: "Production-grade" },
-        { label: "SQLite", description: "Zero setup, local dev" }
-      ],
-            required: true
+        { label: "SQLite", description: "Fast local setup" },
+        { label: "PostgreSQL", description: "Production-ready" }
+      ]
     }
   ]
 })
 ```
 
----
+The server returns structured results from the extension, including successful answers and non-fatal user outcomes like skip or timeout.
 
-## Safety Features
+## Runtime Behavior
 
-| Feature                  | What It Does                                                                       |
-| ------------------------ | ---------------------------------------------------------------------------------- |
-| **Circuit Breaker**      | If you dismiss the quiz 3 times in 5 minutes, the tool auto-disables for 5 minutes |
-| **Three-Tier Errors**    | Transport / Protocol / Application error classification for the agent              |
-| **Configurable Timeout** | Quiz auto-closes after configurable seconds (default: 120)                         |
-| **Nonce-based CSP**      | Content Security Policy prevents XSS in the webview                                |
+### Port discovery
 
----
+The server reads the active extension port from `~/.quizgate-port`. The extension writes this file when it starts and scans from the configured base port if the default is occupied.
 
-## Configuration
+### Error model
 
-Set these in VS Code settings:
+QuizGate separates failures into three buckets so the agent can react correctly:
 
-| Setting            | Default | Description                                               |
-| ------------------ | ------- | --------------------------------------------------------- |
-| `quizgate.port`    | `6010`  | HTTP bridge port. Auto-scans 10 ports upward if occupied. |
-| `quizgate.timeout` | `120`   | Seconds before quiz auto-closes (5–600).                  |
+- Transport: the extension is unreachable or localhost networking failed
+- Protocol: unexpected HTTP or payload mismatch between server and extension
+- Application: the user skipped, dismissed, or timed out
 
----
+### Circuit breaker
 
-## Requirements
+If the user dismisses quizzes repeatedly, the server temporarily disables the tool so the agent can proceed with best judgment instead of spamming prompts.
 
-- **Node.js** 18+
-- **VS Code** 1.85+ with the QuizGate extension installed
-- An MCP-compatible AI agent (Gemini CLI, Claude Desktop, etc.)
+## Local Development
 
----
+From the repository root:
+
+```bash
+npm install
+npm run build
+```
+
+This package uses [`build.mjs`](build.mjs) with `esbuild` so the published package can bundle the local `@quizgate/shared` workspace package into `dist/index.js`.
+
+## Related Docs
+
+- [Root README](../../README.md)
+- [VS Code extension README](../vscode-extension/README.md)
+- [Developer documentation](../../DOCs/documentation.md)
 
 ## License
 

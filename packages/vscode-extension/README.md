@@ -1,34 +1,49 @@
-# QuizGate (VS Code Extension)
+# QuizGate VS Code Extension
 
-> **Stop your AI agent from hallucinating. Make it ask instead.**
+> Give your AI agent a way to ask, not assume.
 
-QuizGate bridges the gap between your AI agent and your IDE. When your AI is unsure about an architectural decision or implementation detail, it uses QuizGate to summon a beautiful, interactive quiz panel directly inside VS Code to ask you for clarification.
+The QuizGate VS Code extension is the IDE-facing half of QuizGate. It runs a lightweight localhost bridge and opens a quiz panel in VS Code whenever the QuizGate MCP server sends a clarification request.
 
-![QuizGate Demo](image.png)
+## What The Extension Does
 
-## Getting Started
+- Receives quiz payloads from the local QuizGate MCP server
+- Opens a webview panel inside VS Code
+- Renders multiple-choice prompts with optional context and descriptions
+- Supports custom free-text answers
+- Enforces required questions before submission
+- Applies timeout behavior and theme-aware UI styling
 
-Using QuizGate requires two pieces:
-1. **This VS Code Extension:** Displays the UI inside your editor.
-2. **The MCP Server:** Connects your AI agent to the extension.
+## Using QuizGate
 
-### Step 1: Install the VS Code Extension
-Install QuizGate directly from the VS Code Marketplace, or load it locally via a `.vsix` file. 
+QuizGate requires both:
 
-Once installed, the extension automatically runs a lightweight background server to listen for questions from your AI.
+1. This VS Code extension
+2. The QuizGate MCP server used by your AI agent
 
-### Step 2: Install the MCP Server
-Your AI Agent needs the MCP server to know how to talk to VS Code. 
+Once both pieces are running, the flow is automatic. When your AI agent faces ambiguity, it can open a quiz in VS Code and wait for your response.
 
-Run this command in your terminal to install the server globally:
+## Install
+
+### Marketplace or local package
+
+Install the extension from the VS Code Marketplace if published there, or install a locally packaged `.vsix`.
+
+Example local install:
+
+```bash
+code --install-extension ./quizgate-0.3.0.vsix
+```
+
+### MCP server setup
+
+ Install MCP
+
 ```bash
 npm install -g quizgate-mcp
 ```
 
-### Step 3: Configure your AI Agent
-Add `quizgate-mcp` to your AI agent's configuration file.
+Your AI agent also needs the QuizGate MCP server. Example MCP config:
 
-**For Gemini CLI / Antigravity (`~/.gemini/settings.json`):**
 ```json
 {
   "mcpServers": {
@@ -40,49 +55,51 @@ Add `quizgate-mcp` to your AI agent's configuration file.
 }
 ```
 
-**For Claude Desktop (`claude_desktop_config.json`):**
-```json
-{
-  "mcpServers": {
-    "quizgate": {
-      "command": "npx",
-      "args": ["-y", "quizgate-mcp"]
-    }
-  }
-}
-```
+## VS Code Settings
 
-Restart your AI agent. That's it!
+- `quizgate.port`: base port for the localhost HTTP bridge, default `6010`
+- `quizgate.timeout`: quiz timeout in seconds, default `120`
 
----
+If the configured port is occupied, the extension scans upward across the next available ports and writes the selected port to `~/.quizgate-port`.
 
-### Local Testing / Development
-If you want to test the MCP server locally without downloading from npm, you can link the repository manually:
+## Local Development
+
+Clone the repository and install dependencies:
 
 ```bash
-
+git clone https://github.com/desktopio684-sudo/AI-ask-me-in-IDE.git
+cd AI-ask-me-in-IDE
+npm install
+npm run build
 ```
 
-Then configure your agent's command to run `node ~/.mcp/quizgate-mcp/index.js`.
+Then open the repository in VS Code and press `F5` to launch the Extension Development Host.
 
----
+If you need the MCP server to run from the local repository instead of a published package, point your MCP client to the built server entry at `packages/mcp-server/dist/index.js` after building.
 
-## Usage
+## UI And Behavior
 
-You don't need to do anything manually. Whenever your AI agent faces ambiguity or needs to ask a clarifying question, it will automatically summon the QuizGate panel in your editor. 
+The extension includes:
 
-Just click your answer and hit Submit!
+- dark and light theme support based on the active VS Code theme
+- countdown timer with auto-close timeout behavior
+- secure webview handling with nonce-based CSP
+- validation for required questions before submit
+- free-text input when the provided choices do not fit
 
-## Configuration Settings
+## Troubleshooting
 
-You can tweak how QuizGate behaves in VS Code settings (`Ctrl+,`):
+- Quiz does not open: confirm the extension is running in the Extension Development Host or installed in your main VS Code instance
+- MCP server cannot connect: check that `~/.quizgate-port` exists and that the extension has started
+- Blank panel: inspect the webview developer tools for CSP or asset-loading problems
+- Wrong port: adjust `quizgate.port` or restart the extension so it rewrites the active port file
 
-- `quizgate.timeout` (Default: `120`): Seconds before the quiz auto-closes if you don't answer.
-- `quizgate.port` (Default: `6010`): Internal bridge port. The extension auto-discovers available ports, so you usually don't need to change this.
+## Related Docs
 
-## 🤖 Instructions for AI Agents
-*(If you are an AI reading this)*:
-When performing a task that involves architectural decisions, user preferences, or ambiguity, prioritize using the `quizgate:ask_user` tool instead of making assumptions. Provide clear options with descriptions and context to help the user make an informed choice.
+- [Root README](../../README.md)
+- [MCP server README](../mcp-server/README.md)
+- [Developer documentation](../../DOCs/documentation.md)
 
----
-*For advanced developer documentation, architecture details, and troubleshooting, see the [Documentation Guide](https://github.com/quizgate/quizgate/blob/main/DOCs/documentation.md).*
+## License
+
+MIT
